@@ -42,15 +42,16 @@ module.exports={
         /* Pegar o ID da ONG autenticada */
         const ong_id = request.headers.authorization;
 
-        const incidents = await connection('incidents')
+        const incident = await connection('incidents')
         .where('id',id)
         .select('ong_id')
-        .first
-        if(incidents.ong_id != ong_id){
-            return response.status(401).json({error: 'Operador não permitido, vaza'});
+        .first();
+        if(incident.ong_id !== ong_id){
+            return response.status(401).json({error:`${ong_id} ${incident.ong_id}`});
         }
         await connection('incidents').where('id',id).delete();
 
         return response.status(204).send();
     }
-}
+};
+            
